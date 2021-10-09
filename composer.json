@@ -1,0 +1,21 @@
+{
+    "name": "mds/php-join-common",
+    "description": "php",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "SanFan",
+            "email": "san_fan@qq.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.2.0"
+    },
+    "autoload": {
+        "psr-4": {
+			"JoinPhpCcommon\\": "src/"
+		}
+    }
+}
