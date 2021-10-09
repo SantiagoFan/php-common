@@ -1,9 +1,9 @@
 <?php
 
-namespace JoinPhpCcommon;
+namespace JoinCommon;
 class Str{
     public function echo()
     {
-        echo 'JoinPhpCcommon';
+        echo 'santiago-fan/php-join-common';
     }
 }
