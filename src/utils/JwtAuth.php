@@ -5,9 +5,6 @@ use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use think\facade\Request;
-use think\facade\Response;
-
 /**
  * Class JwtAuth
  * @package JoinPhpCommon\utils
@@ -125,37 +122,6 @@ class JwtAuth
         }
         else{
             return $array;
-        }
-    }
-
-    /**
-     * 获取用户信息 不存在则返回错误码 或者跳转登录
-     */
-    public function GetUserData($login_url,$token){
-        if (empty($token)) {
-            //ajax
-            if (Request::isAjax()) {
-                $data = ['code' => 50014, 'message' => '未登录请登录后重试'];
-                $response = Response::create($data, 'json', 200, [], []);
-                throw new HttpResponseException($response);// 参考tp 框架内部处理redirect 和error的思路直接输出结果
-            } else {
-                $response = Response::create($login_url, 'redirect', 302)->params([]);
-                throw new HttpResponseException($response);
-            }
-        } else {
-            $is_success = $this->validateToken($token);
-            if (!$is_success) { //校验不成功
-                if (Request::isAjax()) {
-                    $data = ['code' => 50012, 'message' => '登录超时请重新登录'];
-                    $response = Response::create($data, 'json', 200, [], []);
-                    throw new HttpResponseException($response);// 参考tp 框架内部处理redirect 和error的思路直接输出结果
-                } else {
-                    $response = Response::create($login_url, 'redirect', 302)->params([]);
-                    throw new HttpResponseException($response);
-                }
-            } else {//添加用戶状态信息
-                return $this->parseToken($token);
-            }
         }
     }
 }
