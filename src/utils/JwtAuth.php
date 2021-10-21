@@ -3,9 +3,10 @@
 namespace JoinPhpCommon\utils;
 use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use think\facade\Request;
+use think\facade\Response;
 
 /**
  * Class JwtAuth
@@ -78,9 +79,6 @@ class JwtAuth
         $config = $this->getConfig();
         assert($config instanceof Configuration);
 
-        $token = $config->parser()->parse($token);
-        assert($token instanceof Plain);
-
         //验证jwt id是否匹配
         $validate_jwt_id = new \Lcobucci\JWT\Validation\Constraint\IdentifiedBy($this->token_id);
         $config->setValidationConstraints($validate_jwt_id);
@@ -98,7 +96,7 @@ class JwtAuth
         $config->setValidationConstraints($validate_jwt_at);
 
         $constraints = $config->validationConstraints();
-
+        $token = $config->parser()->parse($token);
         try {
             $config->validator()->assert($token, ...$constraints);
             return true;
@@ -114,48 +112,50 @@ class JwtAuth
      * @param string $token
      * @return array|string Claims data
      */
-    public function parseToken(string $token){
+    public function parseToken(string $token,$filter =true,$filter_array=['iss','aud','jti','iat','exp']){
         $config = self::getConfig();
         assert($config instanceof Configuration);
         $token = $config->parser()->parse($token);
-        assert($token instanceof Plain);
-//        $data =[];
-//        foreach($userDate as $k=>$v){
-//            if(in_array($k,['iss','aud','jti','iat','exp']))continue;//过滤jwt 字段
-//            $data[$k] = $v->getValue();
-//        }
-        return $token->claims();
+        $array = $token->claims()->all();
+        if($filter){
+            $data = array_filter($array,function ($var) use ($filter_array){
+                return !in_array($var,$filter_array);
+            },ARRAY_FILTER_USE_KEY);
+            return $data;
+        }
+        else{
+            return $array;
+        }
     }
 
     /**
-     * 获取用户信息
+     * 获取用户信息 不存在则返回错误码 或者跳转登录
      */
-//    public function GetUserData($login_url,$token){
-//        if (empty($token)) {
-//            //ajax
-//            if (Request::isAjax()) {
-//                $response = json(['code' => 50014, 'message' => '未登录请登录后重试']);
-//                throw new HttpResponseException($response);// 参考tp 框架内部处理redirect 和error的思路直接输出结果
-//            } else {
-//                throw new HttpResponseException(redirect($login_url));
-//            }
-//        } else {
-//            $is_success = $this->validateToken($token);
-//            if (!$is_success) { //校验不成功
-//
-//                if (Request::isAjax()) {
-//                    $response = json(['code' => 50012, 'message' => '登录超时请重新登录']);
-//                    throw new HttpResponseException($response);// 参考tp 框架内部处理redirect 和error的思路直接输出结果
-//                } else {
-//                    throw new HttpResponseException(redirect($login_url));
-//                }
-//
-//            } else {//添加用戶状态信息
-//                return $this->getData($token);
-//            }
-//        }
-//    }
-
-
-
+    public function GetUserData($login_url,$token){
+        if (empty($token)) {
+            //ajax
+            if (Request::isAjax()) {
+                $data = ['code' => 50014, 'message' => '未登录请登录后重试'];
+                $response = Response::create($data, 'json', 200, [], []);
+                throw new HttpResponseException($response);// 参考tp 框架内部处理redirect 和error的思路直接输出结果
+            } else {
+                $response = Response::create($login_url, 'redirect', 302)->params([]);
+                throw new HttpResponseException($response);
+            }
+        } else {
+            $is_success = $this->validateToken($token);
+            if (!$is_success) { //校验不成功
+                if (Request::isAjax()) {
+                    $data = ['code' => 50012, 'message' => '登录超时请重新登录'];
+                    $response = Response::create($data, 'json', 200, [], []);
+                    throw new HttpResponseException($response);// 参考tp 框架内部处理redirect 和error的思路直接输出结果
+                } else {
+                    $response = Response::create($login_url, 'redirect', 302)->params([]);
+                    throw new HttpResponseException($response);
+                }
+            } else {//添加用戶状态信息
+                return $this->parseToken($token);
+            }
+        }
+    }
 }
