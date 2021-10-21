@@ -10,7 +10,7 @@ class HttpHelperTest
 {
     public function http(){
         $http = new HttpHelper();
-        $res = $http->get('http://t.cn/index/index/timeout',['a'=>1,'b'=>2]);
+        $res = $http->post_json('http://t.cn/index/index/timeout',['a'=>1,'b'=>2]);
         vdump($res);
     }
 }

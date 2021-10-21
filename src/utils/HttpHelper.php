@@ -19,9 +19,9 @@ class HttpHelper
             $this->base_uri =$config['base_uri'];
         }
     }
-    public function get($url,$data = []){
+    public function get_json($url,$data = []){
         $res = $this->curl($url,$data,'get');
-        return $res;
+        return json_decode($res,true);
     }
 
     /**
@@ -34,6 +34,12 @@ class HttpHelper
         $res = $this->curl($url,$data,'post');
         return json_decode($res,true);
     }
+
+    /**
+     * 文件下载
+     * @param $url 下载地址
+     * @param $path 本地存储路径
+     */
     public function download($url,$path){}
 
     /**
