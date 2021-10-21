@@ -20,7 +20,7 @@ php：>=7.2.0
 │          JwtAuth.php          jwt授权帮助类
 │          Pinyin.php           拼音处理
 │          Text.php             文本处理
-│          Tree.php             树 数据处理
+│          Tree.php             树数据处理
 ```
 
 ### 如何参与开发成为代码贡献人员
