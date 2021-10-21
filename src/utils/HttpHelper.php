@@ -19,7 +19,7 @@ class HttpHelper
             $this->base_uri =$config['base_uri'];
         }
     }
-    public function get($url,$data){
+    public function get($url,$data = []){
         $res = $this->curl($url,$data,'get');
         return $res;
     }
@@ -30,7 +30,7 @@ class HttpHelper
      * @param $data
      * @return mixed
      */
-    public function post_json($url,$data){
+    public function post_json($url,$data=[]){
         $res = $this->curl($url,$data,'post');
         return json_decode($res,true);
     }
@@ -53,17 +53,20 @@ class HttpHelper
             if(!empty($data) && is_array($data)){
                 $data = json_encode($data);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                array_push($this->header,'Content-Length:' . strlen($data));
             }
             if($content_type =='json'){
                 array_push($this->header,'Content-Type: application/json; charset=utf-8');
-                array_push($this->header,'Content-Length:' . strlen($data));
             }
         }
         else{
-            $get_url = $url.'?'.http_bulid_query($data);
-            curl_setopt($curl, CURLOPT_URL, $get_url);
+            if(!empty($data) && is_array($data)&& count($data)>0){
+                $url = $url.(strpos($url,'?')>0?'&':'?').http_build_query($data);
+            }
+            vdump($url);die;
+            curl_setopt($curl, CURLOPT_URL, $url);
         }
-        curl_setopt($curl, CURLOPT_HEADER, 1);              //设置头文件的信息作为数据流输出
+        curl_setopt($curl, CURLOPT_HEADER, false);          //设置头文件的信息作为数据流输出
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);   //设置获取的信息以文件流的形式返回，而不是直接输出。
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);  //不验证
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  //不验证
@@ -74,9 +77,14 @@ class HttpHelper
         $res = curl_exec($curl);
 
         // 4.响应处理
-        $errorno = curl_errno($curl);
-        if ($errorno) {
-            return array('errorno' => false, 'message' => $errorno);
+        $error_code = curl_errno($curl);
+        if ($error_code) {
+            if($error_code==28){
+                return array('code' => 40000, 'message' => '请求超时：'.$error_code);
+            }
+            else{
+                return array('code' => 50000, 'message' => '请求错误：'.$error_code);
+            }
         }
         // 4.关闭
         curl_close($curl);
