@@ -18,7 +18,9 @@ class SM4_SM3_Test
 
 
     public  function sm3(){
-        $sm3  =  new SM3();
+        $sm3 = new SM3();
+        $str = $sm3->sign('DDSADADADASDSASDSAD');
+        echo $str;
     }
 
 }
