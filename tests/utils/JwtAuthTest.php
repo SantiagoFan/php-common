@@ -1,5 +1,5 @@
 <?php
-namespace JoinPhpCommon\example\utils;
+namespace JoinPhpCommon\tests\utils;
 use think\facade\Request;
 use think\facade\Response;
 

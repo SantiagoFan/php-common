@@ -1,5 +1,5 @@
 <?php
-namespace JoinPhpCommon\example\utils;
+namespace JoinPhpCommon\tests\utils;
 class PinyinTest{
     function index(){
         var_dump('xxx');

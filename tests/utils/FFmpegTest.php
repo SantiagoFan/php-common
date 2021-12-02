@@ -1,5 +1,5 @@
 <?php
-namespace JoinPhpCommon\example\utils;
+namespace JoinPhpCommon\tests\utils;
 use JoinPhpCommon\utils\FFmpeg;
 
 class FFmpegTest

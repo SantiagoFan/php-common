@@ -1,7 +1,7 @@
 <?php
 
 
-namespace JoinPhpCommon\example\encrypt;
+namespace JoinPhpCommon\tests\encrypt;
 
 use JoinPhpCommon\encrypt\SM4;
 use JoinPhpCommon\encrypt\SM3;

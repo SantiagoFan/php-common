@@ -30,3 +30,7 @@ php：>=7.2.0
 3. 提交commit push 到自己的仓库
 3. New pull request(简称pr) 合并请求到主库等待合并
 
+## 测试代码
+[phpunit安装介绍](PHPUNIT.md)
+### 安装phpunit
+composer require --dev phpunit/phpunit ^6

@@ -4,6 +4,10 @@ namespace JoinPhpCommon\utils;
 use think\exception\ValidateException;
 use think\Loader;
 
+/**
+ * Class Validate
+ * @package JoinPhpCommon\utils
+ */
 class Validate
 {
     /**
