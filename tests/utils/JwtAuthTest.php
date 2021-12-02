@@ -1,10 +1,12 @@
 <?php
 namespace JoinPhpCommon\tests\utils;
+use PHPUnit\Framework\TestCase;
+
 use think\facade\Request;
 use think\facade\Response;
 
-class JwtAuthTest{
-    public function index() {
+class JwtAuthTest extends TestCase{
+    public function testIndex() {
         $jwt = new JwtAuth('test',
             'dsadadsads',
             't.cn',

@@ -1,11 +1,11 @@
 <?php
 
-
 namespace JoinPhpCommon\tests\utils;
 
+use PHPUnit\Framework\TestCase;
 use JoinPhpCommon\utils\Validate ;
 
-class ValidateTest
+class ValidateTest extends TestCase
 {
     /**
      * 验证数据
@@ -18,7 +18,7 @@ class ValidateTest
      * @return array|string|true
      * @throws ValidateException
      */
-    public function validate()
+    public function testValidate()
     {
         $Validate = new Validate();
         //要验证的数据

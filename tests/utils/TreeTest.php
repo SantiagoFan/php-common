@@ -3,12 +3,12 @@
 
 namespace JoinPhpCommon\tests\utils;
 
-
+use PHPUnit\Framework\TestCase;
 use JoinPhpCommon\utils\Tree;
 
-class TreeTest
+class TreeTest extends TestCase
 {
-    public function tree(){
+    public function testTree(){
         $data = [
             ['name'=>"水果","id"=>"1","parent_id"=>''],
             ['name'=>"蔬菜","id"=>"2","parent_id"=>''],
