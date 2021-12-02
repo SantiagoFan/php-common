@@ -21,20 +21,23 @@ composer require --dev phpunit/phpunit ^6
 ```shell
 <?php
 # 未能加载类请在跟目录添加 phpunit.xml 或者 phpunit.xml.dist
+namespace JoinPhpCommon\tests\utils;
+
 use JoinPhpCommon\utils\Pinyin;
 use PHPUnit\Framework\TestCase;
-class  indexTest extends TestCase{
+
+class PinyinTest extends TestCase{
+
     /**
      * 方法名称已test开始
      */
     function  testPinyin(){
         $res = Pinyin::convert('我是个神仙');
-//        $res = 'woshidashenxian';
-        print_r($res);
+        echo $res;
         // 相等断言
         $this->assertEquals(
             $res,
-            'woshidashenxian'
+            'wo shi ge shen xian'
         );
     }
 }
@@ -60,5 +63,8 @@ class  indexTest extends TestCase{
 ### 运行
 ```shell
 # 单类测试
-phpunit ./tests/indexTest
+phpunit ./tests/utils/PinyinTest
 ```
+
+### idea ide 运行测试
+待添加
