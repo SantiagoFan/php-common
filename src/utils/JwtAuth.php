@@ -99,8 +99,6 @@ class JwtAuth
             $config->validator()->assert($token, ...$constraints);
             return true;
         } catch (RequiredConstraintsViolated $e) {
-            // list of constraints violation exceptions:
-            var_dump($e->violations());
             return false;
         }
     }
