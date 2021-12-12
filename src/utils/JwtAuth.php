@@ -5,6 +5,7 @@ use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 /**
  * Class JwtAuth
  * @package JoinPhpCommon\utils
