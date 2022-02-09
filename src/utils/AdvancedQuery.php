@@ -4,6 +4,7 @@
 namespace JoinPhpCommon\utils;
 
 use think\db\Query;
+use think\db\Where;
 
 /**
  * AdvancedQuery 高级查询构造器
@@ -129,7 +130,7 @@ class AdvancedQuery
             }
         }
         if(count($where)>0){
-            $query->where($where);
+            $query->where(new Where($where));
         }
         return $query;
     }
