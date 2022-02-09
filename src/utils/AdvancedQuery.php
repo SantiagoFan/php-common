@@ -40,11 +40,12 @@ class AdvancedQuery
     {
         // 不含有效的条件
         if(!isset($condition['query']) or count($condition['query']['list'])==0){
-            return;
+            return $query;
         }
         $separator = (isset($condition['query']['condition']) && $condition['query']['condition']== 'or') ?' or ':' and ';
         $sql = self::buildList($condition['query']['list'],$separator);
         $sql && $query->whereRaw($sql);
+        return $query;
     }
 
     /**
