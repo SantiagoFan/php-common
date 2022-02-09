@@ -14,13 +14,13 @@ use think\db\Query;
  *  order:'id',
  *  sort:'desc'
  *  query:{
-        list:[
+list:[
  *              { name:'nickname',op:'like',value:'张'  }
  *          ]
  *      condition:'and'
  *   },
  *  filter:{
-        state:1,
+state:1,
  *      cate:[1,2]
  *  }
  * }
@@ -39,12 +39,28 @@ class AdvancedQuery
     public static function buildQuery(Query $query, array $condition): Query
     {
         // 不含有效的条件
-        if (!isset($condition) or count($condition['list'])==0){
-            return $query;
+        if(!isset($condition['query']) or count($condition['query']['list'])==0){
+            return;
+        }
+        $separator = (isset($condition['query']['condition']) && $condition['query']['condition']== 'or') ?' or ':' and ';
+        $sql = self::buildList($condition['query']['list'],$separator);
+        $sql && $query->whereRaw($sql);
+    }
+
+    /**
+     * 构建数组条件
+     * @param $list 条件数组
+     * @param $separator 链接符
+     * @return string
+     */
+    public static function buildList($list,$separator){
+        // 不含有效的条件
+        if (count($list)==0){
+            return '';
         }
         $where = [];
         // sql 转换
-        foreach ($condition['list'] as $k=> $v){
+        foreach ($list as $k=> $v){
             // 未设置字段名称
             if ($v['field']=='') {
                 continue;
@@ -53,12 +69,8 @@ class AdvancedQuery
             array_push($where,$sql);
         }
         // 拼接
-        $separator = $condition['condition'] == 'or'?' or ':' and ';
-        $sql =  implode($separator,$where);
-        if($sql){
-            $query->whereRaw($sql);
-        }
-        return $query;
+        $separator = $separator == 'or'?' or ':' and ';
+        return implode($separator,$where);
     }
 
     /**
