@@ -15,13 +15,13 @@ use think\db\Where;
  *  order:'id',
  *  sort:'desc'
  *  query:{
-list:[
- *              { name:'nickname',op:'like',value:'张'  }
+ *      list:[
+ *         { name:'nickname',op:'like',value:'张'  }
  *          ]
  *      condition:'and'
  *   },
  *  filter:{
-state:1,
+ *      state:1,
  *      cate:[1,2]
  *  }
  * }
