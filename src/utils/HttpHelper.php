@@ -28,6 +28,7 @@ class HttpHelper
     const TYPE_JSON = 'application/json';
     const TYPE_FROM = 'application/x-www-form-urlencoded';
     const TYPE_XML = 'application/xml';
+    const TYPE_TEXT = 'text/plain';
 
     private $base_url = "";// url 前缀
     private $is_log = true;// 是否记录日志
@@ -35,6 +36,7 @@ class HttpHelper
     private $cookie = []; // 携带cookie
     private $request_content_type = self::TYPE_JSON;
     private $response_content_type = self::TYPE_JSON;
+    
 
     public function __construct($config = [])
     {
@@ -114,6 +116,9 @@ class HttpHelper
             $jsonStr = json_encode($postObj);
             $jsonArray = json_decode($jsonStr,true);
             return $jsonArray;
+        }
+        elseif ($this->response_content_type == self::TYPE_TEXT){
+            return $result;
         }
         return $result;
     }
