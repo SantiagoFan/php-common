@@ -1,0 +1,90 @@
+<?php
+/**
+ * RSA 加密、解密
+ *
+ * Author        范文刚
+ * Email         464884785@qq.com
+ * Time          2020/7/29 上午8:55
+ * Version       1.0 版本号
+ */
+
+namespace JoinPhpCommon\encrypt;
+/**
+ * Class RSA
+ * @package HisSdk\Core\utils
+ */
+class RSA
+{
+    /**
+     * 格式化私钥
+     * @param $str
+     * @return string
+     */
+    public static function formatPriKey($priKey) {
+        $fKey = "-----BEGIN RSA PRIVATE KEY-----\n";
+        $len = strlen($priKey);
+        for($i = 0; $i < $len; $i += 64) {
+            $fKey = $fKey . substr($priKey, $i, 64) . "\n";
+        }
+        $fKey .= "-----END RSA PRIVATE KEY-----";
+        return $fKey;
+    }
+
+    /**
+     * 格式化公钥
+     * @param $pubKey
+     * @return string
+     */
+    public static function formatPubKey($pubKey) {
+        $fKey = "-----BEGIN PUBLIC KEY-----\n";
+        $len = strlen($pubKey);
+        for($i = 0; $i < $len; $i += 64) {
+            $fKey = $fKey . substr($pubKey, $i, 64) . "\n";
+        }
+        $fKey .= "-----END PUBLIC KEY-----";
+        return $fKey;
+    }
+
+    /**
+     * RSA 加密
+     * @param $data
+     * @param $publicKey
+     * @return string
+     */
+    public static function Encrypt($data, $publicKey): string
+    {
+        $publicKey = self::formatPubKey($publicKey);
+        $publicKey = openssl_pkey_get_public($publicKey);
+        openssl_public_encrypt($data, $encrypted, $publicKey);
+        return base64_encode($encrypted);
+    }
+
+    /**
+     * RSA 分段解密
+     * @param $data
+     * @param $privateKey
+     * @return string
+     */
+    public static function SplitDecrypt($data, $privateKey,$block=128): string
+    {
+        $data = base64_decode($data);
+        $privateKey = self::formatPriKey($privateKey);
+
+        $privateKey = openssl_pkey_get_private($privateKey);
+        $decrypted = '';
+        foreach (str_split($data,$block) as $chunk) {
+            openssl_private_decrypt($chunk, $f, $privateKey);
+            $decrypted = $decrypted . $f;
+        }
+        return $decrypted;
+    }
+    // rsa 解密
+    public static function Decrypt($data, $privateKey): string
+    {
+        $privateKey = self::formatPriKey($privateKey);
+        $privateKey = openssl_pkey_get_private($privateKey);
+        openssl_private_decrypt(base64_decode($data), $decrypted, $privateKey);
+        return $decrypted;
+    }
+
+}
